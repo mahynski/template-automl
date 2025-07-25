@@ -7,7 +7,7 @@ Different [AutoGluon](https://auto.gluon.ai/stable/index.html) modules have been
 To get started:
 
 ~~~bash
-$ bash .devcontainer/setup.sh`
+$ bash .devcontainer/setup.sh
 $ bash .devcontainer/start_mlflow.sh
 $ bash .devcontainer/start_jupyter.sh
 ~~~
