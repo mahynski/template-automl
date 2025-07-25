@@ -1,0 +1,26 @@
+[project]
+name = "object-detection"
+version = "0.1.0"
+description = "Object Detection with Autogluon"
+readme = "README.md"
+requires-python = "==3.10.*"
+dependencies = [ # https://auto.gluon.ai/stable/tutorials/multimodal/object_detection/quick_start/quick_start_coco.html
+    "autogluon.multimodal",
+    "mmcv==2.1.0",
+    "mmdet==3.2.0",
+    "mmengine>=0.10.6",
+    "torch==2.5.0",
+    "torchvision==0.20.0",
+    "torchaudio==2.5.0",
+    "pycocotools>=2.0.10", # https://auto.gluon.ai/stable/install.html
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.30.0",
+]

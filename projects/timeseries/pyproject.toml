@@ -1,0 +1,20 @@
+[project]
+name = "timeseries"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.10.3",
+    "scikit-learn>=1.7.1",
+]
+
+[tool.uv.workspace]
+members = [
+    "my_new_package",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.30.0",
+]

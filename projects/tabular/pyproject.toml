@@ -1,0 +1,14 @@
+[project]
+name = "tabular"
+version = "0.1.0"
+description = "Tabular Prediction with Autogluon"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "autogluon.tabular[all,skex,imodels,skl2onnx]",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.30.0",
+]
