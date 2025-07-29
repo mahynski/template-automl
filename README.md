@@ -134,4 +134,4 @@ This `.crt` file can be stored in the `.ignore/` folder if necessary.
 
 Update the CITATION.cff file to enable appropriate citations.
 
-The logo for this repository (logo.png) was generated using ChatGPI on July 25, 2025 with the prompt "Create a logo that represents automatic machine learning"
+The logo for this repository (logo.png) was generated using ChatGPT on July 25, 2025 with the prompt "Create a logo that represents automatic machine learning"
