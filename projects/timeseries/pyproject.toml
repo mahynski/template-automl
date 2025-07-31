@@ -5,13 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "autogluon.timeseries",
     "matplotlib>=3.10.3",
     "scikit-learn>=1.7.1",
-]
-
-[tool.uv.workspace]
-members = [
-    "my_new_package",
 ]
 
 [dependency-groups]
