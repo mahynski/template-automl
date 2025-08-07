@@ -10,7 +10,7 @@ RUN apt install libgl1 -y \
  && apt install libglib2.0-0 -y
 
 # This is for document prediction
-RUN sudo apt install tesseract-ocr -y
+RUN apt install tesseract-ocr -y
 
 # Create a user with a given User and Group ID
 # https://vsupalov.com/docker-shared-permissions/
