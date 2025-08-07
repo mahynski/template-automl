@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
 
-# Need git and build-essential (provides gcc compiler) for pre-commit, also libgl1 for object detection
+# Need git and build-essential (provides gcc compiler) for pre-commit
 RUN apt update -y \
  && apt install git -y \
  && apt install build-essential -y
