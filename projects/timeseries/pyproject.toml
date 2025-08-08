@@ -8,6 +8,13 @@ dependencies = [
     "autogluon.timeseries",
     "prophet",
     "statsmodels",
+    "tslearn",
+    "functime",
+    "tsfel",
+    "pytorch-forecasting",
+    "neuralforecast",
+    "mlforecast",
+    "statsforecast",
 ]
 
 [dependency-groups]
