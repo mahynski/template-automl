@@ -5,6 +5,13 @@ RUN apt update -y \
  && apt install git -y \
  && apt install build-essential -y
 
+# Also add timezone support
+RUN apt install tzdata -y \
+ && ln -sf /usr/share/zoneinfo/$(cat /etc/timezone) /etc/localtime \
+ && echo $(cat /etc/timezone) > /etc/timezone
+
+ENV TZ=America/New_York
+
 # These are for object detection
 RUN apt install libgl1 -y \
  && apt install libglib2.0-0 -y
