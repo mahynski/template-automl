@@ -5,13 +5,11 @@ description = "Timeseries Prediction with Autogluon"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "autogluon.timeseries",
+    "autogluon.timeseries>=1.5.0",
     "prophet",
     "statsmodels",
     "tslearn",
-    "functime",
     "tsfel",
-    "pytorch-forecasting",
     "neuralforecast",
     "mlforecast",
     "statsforecast",
