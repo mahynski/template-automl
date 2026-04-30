@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = "==3.10.*"
 dependencies = [ # https://auto.gluon.ai/stable/tutorials/multimodal/object_detection/quick_start/quick_start_coco.html
     "autogluon.multimodal>=1.5.0",
-    "mmcv==2.1.0",
+    "mmcv==2.2.0",
     "mmdet==3.2.0",
     "mmengine>=0.10.6",
     "torch==2.5.0",
