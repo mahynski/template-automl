@@ -1,12 +1,53 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for more information:
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-# https://containers.dev/guide/dependabot
 
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
-   directory: "/"
-   schedule:
-     interval: weekly
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/document_prediction"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/image_prediction"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/image_segmentation"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/multimodal_prediction"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/object_detection"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/semantic_matching"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/tabular"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/text_prediction"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "pip"
+    directory: "/projects/timeseries"
+    schedule:
+      interval: weekly
