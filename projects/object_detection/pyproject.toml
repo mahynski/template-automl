@@ -8,7 +8,7 @@ dependencies = [ # https://auto.gluon.ai/stable/tutorials/multimodal/object_dete
     "autogluon.multimodal>=1.5.0",
     "mmcv==2.1.0",
     "mmdet==3.2.0",
-    "mmengine>=0.10.6",
+    "mmengine>=0.10.7",
     "torch==2.5.0",
     "torchvision==0.20.0",
     "torchaudio==2.5.0",
