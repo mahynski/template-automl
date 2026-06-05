@@ -22,5 +22,5 @@ explicit = true
 
 [dependency-groups]
 dev = [
-    "ipykernel>=6.30.0",
+    "ipykernel>=7.2.0",
 ]
