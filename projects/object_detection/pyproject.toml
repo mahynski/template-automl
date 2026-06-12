@@ -10,7 +10,7 @@ dependencies = [ # https://auto.gluon.ai/stable/tutorials/multimodal/object_dete
     "mmdet==3.2.0",
     "mmengine>=0.10.7",
     "torch==2.12.0",
-    "torchvision==0.26.0",
+    "torchvision==0.27.0",
     "torchaudio==2.11.0",
     "pycocotools>=2.0.11", # https://auto.gluon.ai/stable/install.html
 ]
