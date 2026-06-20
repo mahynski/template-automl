@@ -1,6 +1,9 @@
 # Using this Template
 
-<img src="logo.png" align="right" width=110 />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="logo-dark.png" />
+  <img src="logo-light.png" align="right" width=200 alt="template-automl logo" />
+</picture>
 
 Different [AutoGluon](https://auto.gluon.ai/stable/index.html) modules have been installed in the `projects/` directory to provide environments that enable you to quickly spin up on AutoML projects of different types.
 
