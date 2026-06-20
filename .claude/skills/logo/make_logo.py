@@ -26,12 +26,13 @@ Download them from Google Fonts if missing:
     https://github.com/google/fonts/raw/main/ofl/spacemono/SpaceMono-Regular.ttf
 """
 
+import math
 import os
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 # ==== PER-REPO SETTINGS (change these) ====================================
-TITLE = 'template-uv-project'   # repo name, printed under the badge
+TITLE = 'template-automl'   # repo name, printed under the badge
 
 
 def draw_hero(md, box, neon):
@@ -49,31 +50,46 @@ def draw_hero(md, box, neon):
     Notes
     -----
     Draw only flat ``neon`` shapes/text -- the caller blurs a copy of this
-    layer to make the glow, so no glow handling is needed here. This default
-    is the ``template-uv-project`` hero: a viewfinder/template frame (four
-    corner brackets) around a lowercase ``uv`` monogram. Replace the body for
-    other repos; keep the fill color ``neon``.
+    layer to make the glow, so no glow handling is needed here. This hero is
+    the ``template-automl`` mark: a toothed gear/cog (automation) enclosing an
+    ``ML`` monogram (machine learning). Replace the body for other repos; keep
+    the fill color ``neon``.
     """
     fx0, fy0, fx1, fy1 = box
-    arm, th, cr = int(96 * SS), int(26 * SS), int(8 * SS)
+    cx, cy = (fx0 + fx1) / 2, (fy0 + fy1) / 2
+    half = (fx1 - fx0) / 2
 
-    def box_sorted(x0, y0, x1, y1):
-        return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
+    # Gear geometry (fractions of the hero half-width).
+    n_teeth = 8
+    r_ring_out = half * 0.74          # outer edge of the solid ring
+    r_ring_in = half * 0.47           # inner hole -> the ML sits here
+    r_tip = half * 0.99               # tooth tips reach near the frame edge
+    r_base = r_ring_out * 0.95        # teeth start just inside the ring
+    half_base = math.radians(13)      # angular half-width at tooth base
+    half_tip = math.radians(8.5)      # narrower at the tip (slight taper)
 
-    def bracket(x, y, dx, dy):  # L bracket with its corner at (x, y)
-        md.rounded_rectangle(box_sorted(x, y, x + dx * arm, y + dy * th), cr, fill=neon)
-        md.rounded_rectangle(box_sorted(x, y, x + dx * th, y + dy * arm), cr, fill=neon)
+    def pt(r, ang):
+        return (cx + r * math.cos(ang), cy + r * math.sin(ang))
 
-    bracket(fx0, fy0, +1, +1)
-    bracket(fx1, fy0, -1, +1)
-    bracket(fx0, fy1, +1, -1)
-    bracket(fx1, fy1, -1, -1)
+    # Teeth: tapered trapezoids spaced evenly around the circle.
+    for k in range(n_teeth):
+        a = 2 * math.pi * k / n_teeth
+        md.polygon([pt(r_base, a - half_base), pt(r_tip, a - half_tip),
+                    pt(r_tip, a + half_tip), pt(r_base, a + half_base)], fill=neon)
 
-    font = jost(int(196 * SS), weight=600)
-    txt = 'uv'
+    # Solid ring: fill the outer disc, then carve the inner hole transparent.
+    md.ellipse([cx - r_ring_out, cy - r_ring_out, cx + r_ring_out, cy + r_ring_out], fill=neon)
+    md.ellipse([cx - r_ring_in, cy - r_ring_in, cx + r_ring_in, cy + r_ring_in], fill=(0, 0, 0, 0))
+
+    # ML monogram centered in the hole, auto-fit to the hole width.
+    txt = 'ML'
+    size = int(half)
+    font = jost(size, weight=600)
+    while md.textlength(txt, font=font) > r_ring_in * 1.7 and size > 10:
+        size -= 2
+        font = jost(size, weight=600)
     tb = md.textbbox((0, 0), txt, font=font)
-    cx, cy = (fx0 + fx1) // 2, (fy0 + fy1) // 2
-    md.text((cx - (tb[2] - tb[0]) // 2 - tb[0], cy - (tb[3] - tb[1]) // 2 - tb[1]),
+    md.text((cx - (tb[2] - tb[0]) / 2 - tb[0], cy - (tb[3] - tb[1]) / 2 - tb[1]),
             txt, font=font, fill=neon)
 
 

@@ -37,8 +37,8 @@ logo is recognizably related. Only two things change per repo.
 **Change per repo:**
 - **Hero glyph** — the neon-green mark inside the badge. Pick something that
   captures the repo's name/theme. Draw it flat in the signature neon green; the
-  glow is applied automatically. (This repo's hero is a viewfinder/"template
-  frame" of four corner brackets around a lowercase `uv` monogram.)
+  glow is applied automatically. (This repo's hero is a toothed gear/cog
+  enclosing an `ML` monogram.)
 - **Title** — the repo name, printed under the badge.
 
 ## Design system
