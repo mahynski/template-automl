@@ -32,10 +32,12 @@ import os
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 # ==== PER-REPO SETTINGS (change these) ====================================
-TITLE = 'template-automl'   # repo name, printed under the badge
+TITLE = "template-automl"  # repo name, printed under the badge
 
 
-def draw_hero(md, box, neon):
+def draw_hero(
+    md: ImageDraw.ImageDraw, box: tuple[int, int, int, int], neon: tuple[int, int, int]
+) -> None:
     """Draw this repo's neon glyph inside the badge.
 
     Parameters
@@ -61,90 +63,112 @@ def draw_hero(md, box, neon):
 
     # Gear geometry (fractions of the hero half-width).
     n_teeth = 8
-    r_ring_out = half * 0.74          # outer edge of the solid ring
-    r_ring_in = half * 0.47           # inner hole -> the ML sits here
-    r_tip = half * 0.99               # tooth tips reach near the frame edge
-    r_base = r_ring_out * 0.95        # teeth start just inside the ring
-    half_base = math.radians(13)      # angular half-width at tooth base
-    half_tip = math.radians(8.5)      # narrower at the tip (slight taper)
+    r_ring_out = half * 0.74  # outer edge of the solid ring
+    r_ring_in = half * 0.47  # inner hole -> the ML sits here
+    r_tip = half * 0.99  # tooth tips reach near the frame edge
+    r_base = r_ring_out * 0.95  # teeth start just inside the ring
+    half_base = math.radians(13)  # angular half-width at tooth base
+    half_tip = math.radians(8.5)  # narrower at the tip (slight taper)
 
-    def pt(r, ang):
+    def pt(r: float, ang: float) -> tuple[float, float]:
+        """Convert a polar offset from the center into image coordinates."""
         return (cx + r * math.cos(ang), cy + r * math.sin(ang))
 
     # Teeth: tapered trapezoids spaced evenly around the circle.
     for k in range(n_teeth):
         a = 2 * math.pi * k / n_teeth
-        md.polygon([pt(r_base, a - half_base), pt(r_tip, a - half_tip),
-                    pt(r_tip, a + half_tip), pt(r_base, a + half_base)], fill=neon)
+        md.polygon(
+            [
+                pt(r_base, a - half_base),
+                pt(r_tip, a - half_tip),
+                pt(r_tip, a + half_tip),
+                pt(r_base, a + half_base),
+            ],
+            fill=neon,
+        )
 
     # Solid ring: fill the outer disc, then carve the inner hole transparent.
-    md.ellipse([cx - r_ring_out, cy - r_ring_out, cx + r_ring_out, cy + r_ring_out], fill=neon)
-    md.ellipse([cx - r_ring_in, cy - r_ring_in, cx + r_ring_in, cy + r_ring_in], fill=(0, 0, 0, 0))
+    md.ellipse(
+        [cx - r_ring_out, cy - r_ring_out, cx + r_ring_out, cy + r_ring_out], fill=neon
+    )
+    md.ellipse(
+        [cx - r_ring_in, cy - r_ring_in, cx + r_ring_in, cy + r_ring_in],
+        fill=(0, 0, 0, 0),
+    )
 
     # ML monogram centered in the hole, auto-fit to the hole width.
-    txt = 'ML'
+    txt = "ML"
     size = int(half)
     font = jost(size, weight=600)
     while md.textlength(txt, font=font) > r_ring_in * 1.7 and size > 10:
         size -= 2
         font = jost(size, weight=600)
     tb = md.textbbox((0, 0), txt, font=font)
-    md.text((cx - (tb[2] - tb[0]) / 2 - tb[0], cy - (tb[3] - tb[1]) / 2 - tb[1]),
-            txt, font=font, fill=neon)
+    md.text(
+        (cx - (tb[2] - tb[0]) / 2 - tb[0], cy - (tb[3] - tb[1]) / 2 - tb[1]),
+        txt,
+        font=font,
+        fill=neon,
+    )
 
 
 # ==== BRAND FRAME (keep identical across repos) ===========================
-SS = 2                          # supersampling factor for crisp edges
+SS = 2  # supersampling factor for crisp edges
 W, H = 1590 * SS, 1098 * SS
 
 # palette
-GLASS_TOP, GLASS_BOT = (34, 37, 46), (9, 10, 13)    # dark-glass badge gradient
-NEON = (134, 239, 172)          # #86efac signature neon green (hero + dark title)
-NEON_BRIGHT = (190, 250, 213)   # lighter core that sells the glow
-DEEP_GREEN = (21, 128, 61)      # #15803d title color for the light variant
+GLASS_TOP, GLASS_BOT = (34, 37, 46), (9, 10, 13)  # dark-glass badge gradient
+NEON = (134, 239, 172)  # #86efac signature neon green (hero + dark title)
+NEON_BRIGHT = (190, 250, 213)  # lighter core that sells the glow
+DEEP_GREEN = (21, 128, 61)  # #15803d title color for the light variant
 
 # badge geometry -- FIXED brand frame; identical for every repo. The central
 # glass rectangle never resizes; the hero scales to fit BADGE_INNER, the badge
 # never grows to fit the hero.
-BADGE_SIZE = 600 * SS                       # side length of the glass square
-BADGE_TOP = 165 * SS                        # distance from canvas top
-BADGE_RADIUS = 132 * SS                     # corner radius
-BADGE_X0 = W // 2 - BADGE_SIZE // 2         # centered horizontally
+BADGE_SIZE = 600 * SS  # side length of the glass square
+BADGE_TOP = 165 * SS  # distance from canvas top
+BADGE_RADIUS = 132 * SS  # corner radius
+BADGE_X0 = W // 2 - BADGE_SIZE // 2  # centered horizontally
 BADGE_Y0 = BADGE_TOP
 BADGE_X1 = BADGE_X0 + BADGE_SIZE
 BADGE_Y1 = BADGE_Y0 + BADGE_SIZE
 BADGE_BOX = [BADGE_X0, BADGE_Y0, BADGE_X1, BADGE_Y1]
-HERO_MARGIN = 118 * SS                       # inset of the hero frame from edge
-HERO_BOX = (BADGE_X0 + HERO_MARGIN, BADGE_Y0 + HERO_MARGIN,
-            BADGE_X1 - HERO_MARGIN, BADGE_Y1 - HERO_MARGIN)
+HERO_MARGIN = 118 * SS  # inset of the hero frame from edge
+HERO_BOX = (
+    BADGE_X0 + HERO_MARGIN,
+    BADGE_Y0 + HERO_MARGIN,
+    BADGE_X1 - HERO_MARGIN,
+    BADGE_Y1 - HERO_MARGIN,
+)
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-FONT_JOST = os.path.join(_HERE, 'fonts', 'Jost[wght].ttf')
-FONT_MONO = os.path.join(_HERE, 'fonts', 'SpaceMono-Regular.ttf')
+FONT_JOST = os.path.join(_HERE, "fonts", "Jost[wght].ttf")
+FONT_MONO = os.path.join(_HERE, "fonts", "SpaceMono-Regular.ttf")
 
 
-def jost(size, weight=400):
+def jost(size: int, weight: int = 400) -> ImageFont.FreeTypeFont:
+    """Load the branded Jost font at the requested size and weight."""
     f = ImageFont.truetype(FONT_JOST, size)
     f.set_variation_by_axes([weight])
     return f
 
 
-def vgrad(top, bot):
+def vgrad(top: tuple[int, int, int], bot: tuple[int, int, int]) -> Image.Image:
     """Full-canvas vertical gradient."""
-    g = Image.new('RGB', (1, H))
+    g = Image.new("RGB", (1, H))
     for y in range(H):
         t = y / (H - 1)
         g.putpixel((0, y), tuple(int(top[i] + (bot[i] - top[i]) * t) for i in range(3)))
     return g.resize((W, H))
 
 
-def render(theme):
+def render(theme: str) -> None:
     """Render one variant; ``theme`` is ``'light'`` or ``'dark'``."""
     # --- transparent canvas: the badge is a clean cutout with no
     #     backdrop, so the README shows it over whatever page color sits
     #     behind it. Only the title color (and the dark variant's title
     #     glow) changes per theme. ---
-    img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
     # The badge uses the FIXED module-level geometry (BADGE_BOX) in every
@@ -152,32 +176,38 @@ def render(theme):
     # position regardless of theme, hero, or title.
 
     # --- glass body (dark in BOTH themes) ---
-    mask = Image.new('L', (W, H), 0)
+    mask = Image.new("L", (W, H), 0)
     ImageDraw.Draw(mask).rounded_rectangle(BADGE_BOX, BADGE_RADIUS, fill=255)
-    img.paste(vgrad(GLASS_TOP, GLASS_BOT).convert('RGBA'), (0, 0), mask)
+    img.paste(vgrad(GLASS_TOP, GLASS_BOT).convert("RGBA"), (0, 0), mask)
 
     # --- top gloss sheen ---
-    gloss = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    gloss = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(gloss).rounded_rectangle(
         [BADGE_X0, BADGE_Y0, BADGE_X1, BADGE_Y0 + int(BADGE_SIZE * 0.46)],
-        BADGE_RADIUS, fill=(255, 255, 255, 26))
+        BADGE_RADIUS,
+        fill=(255, 255, 255, 26),
+    )
     gloss = gloss.filter(ImageFilter.GaussianBlur(26 * SS))
     # clip the sheen to the badge, then composite so the glass stays opaque
-    gloss.putalpha(Image.composite(gloss.getchannel('A'), Image.new('L', (W, H), 0), mask))
+    gloss.putalpha(
+        Image.composite(gloss.getchannel("A"), Image.new("L", (W, H), 0), mask)
+    )
     img.alpha_composite(gloss)
 
     # --- neon hairline border ---
     draw.rounded_rectangle(BADGE_BOX, BADGE_RADIUS, outline=(*NEON, 70), width=2 * SS)
 
     # --- hero glyph + glow (drawn inside the fixed HERO_BOX) ---
-    mark = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    mark = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     draw_hero(ImageDraw.Draw(mark), HERO_BOX, NEON)
     for blur, alpha in [(34 * SS, 150), (16 * SS, 150), (6 * SS, 120)]:
         g = mark.filter(ImageFilter.GaussianBlur(blur))
-        g.putalpha(g.getchannel('A').point(lambda a: min(255, a * alpha // 255)))
+        g.putalpha(g.getchannel("A").point(lambda a: min(255, a * alpha // 255)))
         img.alpha_composite(g)
-    core = Image.new('RGBA', (W, H), (0, 0, 0, 0))   # bright inner core
-    core.paste(Image.new('RGBA', (W, H), (*NEON_BRIGHT, 255)), (0, 0), mark.getchannel('A'))
+    core = Image.new("RGBA", (W, H), (0, 0, 0, 0))  # bright inner core
+    core.paste(
+        Image.new("RGBA", (W, H), (*NEON_BRIGHT, 255)), (0, 0), mark.getchannel("A")
+    )
     img.alpha_composite(core.filter(ImageFilter.GaussianBlur(3 * SS)))
     img.alpha_composite(mark)
 
@@ -189,20 +219,20 @@ def render(theme):
         font = jost(size, weight=500)
     ty = BADGE_Y1 + int(108 * SS)
     tx = W // 2 - draw.textlength(TITLE, font=font) / 2
-    if theme == 'light':
+    if theme == "light":
         draw.text((tx, ty), TITLE, font=font, fill=DEEP_GREEN)
     else:
-        glow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+        glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         ImageDraw.Draw(glow).text((tx, ty), TITLE, font=font, fill=(*NEON, 200))
         img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(14 * SS)))
         draw.text((tx, ty), TITLE, font=font, fill=NEON)
 
     out = img.resize((1590, 1098), Image.LANCZOS)  # keep alpha
-    path = f'logo-{theme}.png'
+    path = f"logo-{theme}.png"
     out.save(path)
-    print('saved', path)
+    print("saved", path)
 
 
-if __name__ == '__main__':
-    render('light')
-    render('dark')
+if __name__ == "__main__":
+    render("light")
+    render("dark")
